@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quiz_app/CategoriesScreen.dart';
+import 'package:quiz_app/loginpage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,6 +10,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: Homepage());
+    return MaterialApp(debugShowCheckedModeBanner: false, home: Homepage());
   }
 }
