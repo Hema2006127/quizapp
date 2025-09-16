@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/prequiz.dart';
 
 class NextPage extends StatefulWidget {
   final String userName;
@@ -61,7 +62,7 @@ class _NextPageState extends State<NextPage>
 
             final slideAnimation =
                 Tween<Offset>(
-                  begin: const Offset(0, -1),
+                  begin: const Offset(0, 0.5),
                   end: Offset.zero,
                 ).animate(
                   CurvedAnimation(
@@ -70,82 +71,104 @@ class _NextPageState extends State<NextPage>
                   ),
                 );
 
-            final scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+            final scaleAnimation = Tween<double>(begin: 0.85, end: 1.0).animate(
               CurvedAnimation(
                 parent: _controller,
                 curve: Interval(index * 0.1, 1.0, curve: Curves.easeOutBack),
               ),
             );
 
-            return SlideTransition(
-              position: slideAnimation,
-              child: ScaleTransition(
-                scale: scaleAnimation,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            QuizPage(subjectName: subject["title"]!),
-                      ),
-                    );
-                  },
-                  child: Card(
-                    margin: const EdgeInsets.all(12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    elevation: 6,
-                    child: Column(
-                      children: [
-                        ClipRRect(
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(15),
-                          ),
-                          child: Image.asset(
-                            subject["image"]!,
-                            height: 150,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
+            final fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
+              CurvedAnimation(
+                parent: _controller,
+                curve: Interval(index * 0.1, 1.0, curve: Curves.easeIn),
+              ),
+            );
+
+            return FadeTransition(
+              opacity: fadeAnimation,
+              child: SlideTransition(
+                position: slideAnimation,
+                child: ScaleTransition(
+                  scale: scaleAnimation,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => PreQuizPage(
+                            subjectName: subject["title"]!,
+                            quizImage: subject["image"]!,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Text(
-                            subject["title"]!,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                      );
+                    },
+
+                    child: Card(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      elevation: 8,
+                      shadowColor: Colors.black45,
+                      child: Stack(
+                        children: [
+                          Hero(
+                            tag: subject["title"]!,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.asset(
+                                subject["image"]!,
+                                height: 160,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                          Container(
+                            height: 160,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.black.withOpacity(0.3),
+                                  Colors.transparent,
+                                ],
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 12,
+                            left: 16,
+                            child: Text(
+                              subject["title"]!,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black54,
+                                    offset: Offset(1, 1),
+                                    blurRadius: 2,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
             );
           },
-        ),
-      ),
-    );
-  }
-}
-
-class QuizPage extends StatelessWidget {
-  final String subjectName;
-
-  const QuizPage({super.key, required this.subjectName});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("$subjectName Quiz")),
-      body: Center(
-        child: Text(
-          "Welcome to the $subjectName quiz!",
-          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
       ),
     );

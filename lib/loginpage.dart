@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quiz_app/categorypage.dart';
+import 'categorypage.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -8,123 +8,145 @@ class Homepage extends StatefulWidget {
   State<Homepage> createState() => _HomepageState();
 }
 
-class _HomepageState extends State<Homepage> {
+class _HomepageState extends State<Homepage>
+    with SingleTickerProviderStateMixin {
   final TextEditingController nameController = TextEditingController();
+  late AnimationController _controller;
+  late Animation<double> _fadeImage, _fadeTextField, _fadeButton;
+  late Animation<Offset> _slideImage, _slideTextField, _slideButton;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    );
+
+    _fadeImage = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _controller, curve: const Interval(0.0, 0.4)),
+    );
+    _fadeTextField = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _controller, curve: const Interval(0.4, 0.7)),
+    );
+    _fadeButton = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _controller, curve: const Interval(0.7, 1.0)),
+    );
+
+    _slideImage = Tween<Offset>(
+      begin: const Offset(0, -0.3),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    _slideTextField = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    _slideButton = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+
+    _controller.forward();
+  }
 
   @override
   void dispose() {
     nameController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 45.0,
-        backgroundColor: const Color.fromARGB(171, 240, 232, 160),
-        title: const Text(
-          "Welcome🖐",
-          style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-        ),
-        centerTitle: true,
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("images/background.jpg"),
-            fit: BoxFit.cover,
+      body: Stack(
+        children: [
+          SizedBox.expand(
+            child: Image.asset("images/background.jpg", fit: BoxFit.cover),
           ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: <Widget>[
-              const SizedBox(height: 80),
-              const Center(
-                child: CircleAvatar(
-                  radius: 50.0,
-                  backgroundImage: AssetImage("images/s1.jpg"),
-                ),
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.black.withValues(alpha: 0.2),
+                  Colors.transparent,
+                ],
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
               ),
-              Container(
-                margin: const EdgeInsets.symmetric(
-                  vertical: 40,
-                  horizontal: 20,
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 5,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(
-                    255,
-                    248,
-                    248,
-                    151,
-                  ).withOpacity(0.9),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: TextField(
-                  controller: nameController,
-                  style: const TextStyle(color: Colors.black, fontSize: 18),
-                  decoration: const InputDecoration(
-                    hintText: ":Enter your name",
-                    hintStyle: TextStyle(
-                      color: Colors.black54,
-                      fontWeight: FontWeight.bold,
+            ),
+          ),
+          SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SlideTransition(
+                      position: _slideImage,
+                      child: FadeTransition(
+                        opacity: _fadeImage,
+                        child: const CircleAvatar(
+                          radius: 60,
+                          backgroundImage: AssetImage("images/s1.jpg"),
+                        ),
+                      ),
                     ),
-                    border: InputBorder.none,
-                    prefixIcon: Icon(Icons.person, color: Colors.black),
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (nameController.text.trim().isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          "Please enter your name first",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Color.fromARGB(255, 236, 236, 11),
+                    const SizedBox(height: 60),
+                    SlideTransition(
+                      position: _slideTextField,
+                      child: FadeTransition(
+                        opacity: _fadeTextField,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 24),
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.85),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: TextField(
+                            controller: nameController,
+                            decoration: const InputDecoration(
+                              hintText: "Enter your name",
+                              prefixIcon: Icon(Icons.person),
+                              border: InputBorder.none,
+                            ),
                           ),
                         ),
-                        backgroundColor: Color.fromARGB(255, 255, 255, 254),
                       ),
-                    );
-                  } else {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            NextPage(userName: nameController.text.trim()),
+                    ),
+                    const SizedBox(height: 40),
+                    SlideTransition(
+                      position: _slideButton,
+                      child: FadeTransition(
+                        opacity: _fadeButton,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (nameController.text.trim().isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Please enter your name first"),
+                                ),
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      NextPage(userName: nameController.text),
+                                ),
+                              );
+                            }
+                          },
+                          child: const Text("Go to Quiz"),
+                        ),
                       ),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 233, 237, 151),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30,
-                    vertical: 12,
-                  ),
-                ),
-                child: const Text(
-                  "Go to Quiz",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
