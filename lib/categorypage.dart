@@ -44,18 +44,37 @@ class _NextPageState extends State<NextPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 244, 233, 192),
-        title: Text("Hello, ${widget.userName} 👋"),
-        centerTitle: true,
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("images/background.jpg"),
-            fit: BoxFit.cover,
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+        title: Text(
+          "Hello, ${widget.userName} 👋",
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.white,
           ),
         ),
+        centerTitle: true,
+        elevation: 6,
+        shadowColor: Colors.black45,
+
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromARGB(255, 0, 0, 0),
+              Color.fromARGB(255, 243, 243, 243),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+
+        /// لستة الكروت
         child: ListView.builder(
+          padding: const EdgeInsets.symmetric(vertical: 16),
           itemCount: subjects.length,
           itemBuilder: (context, index) {
             final subject = subjects[index];
@@ -71,7 +90,7 @@ class _NextPageState extends State<NextPage>
                   ),
                 );
 
-            final scaleAnimation = Tween<double>(begin: 0.85, end: 1.0).animate(
+            final scaleAnimation = Tween<double>(begin: 0.9, end: 1.0).animate(
               CurvedAnimation(
                 parent: _controller,
                 curve: Interval(index * 0.1, 1.0, curve: Curves.easeOutBack),
@@ -92,6 +111,7 @@ class _NextPageState extends State<NextPage>
                 child: ScaleTransition(
                   scale: scaleAnimation,
                   child: InkWell(
+                    borderRadius: BorderRadius.circular(20),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -99,6 +119,7 @@ class _NextPageState extends State<NextPage>
                           builder: (_) => PreQuizPage(
                             subjectName: subject["title"]!,
                             quizImage: subject["image"]!,
+                            username: widget.userName,
                           ),
                         ),
                       );
@@ -107,35 +128,32 @@ class _NextPageState extends State<NextPage>
                     child: Card(
                       margin: const EdgeInsets.symmetric(
                         horizontal: 16,
-                        vertical: 8,
+                        vertical: 10,
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      elevation: 8,
-                      shadowColor: Colors.black45,
+                      elevation: 10,
+                      shadowColor: Colors.black54,
+                      clipBehavior: Clip.antiAlias,
                       child: Stack(
                         children: [
                           Hero(
                             tag: subject["title"]!,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.asset(
-                                subject["image"]!,
-                                height: 160,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              ),
+                            child: Image.asset(
+                              subject["image"]!,
+                              height: 170,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
                             ),
                           ),
                           Container(
-                            height: 160,
+                            height: 170,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
                               gradient: LinearGradient(
                                 colors: [
-                                  Colors.black.withOpacity(0.3),
-                                  Colors.transparent,
+                                  Colors.black.withOpacity(0.5),
+                                  Color.fromARGB(0, 255, 250, 250),
                                 ],
                                 begin: Alignment.bottomCenter,
                                 end: Alignment.topCenter,
@@ -143,19 +161,19 @@ class _NextPageState extends State<NextPage>
                             ),
                           ),
                           Positioned(
-                            bottom: 12,
-                            left: 16,
+                            bottom: 16,
+                            left: 20,
                             child: Text(
                               subject["title"]!,
                               style: const TextStyle(
-                                fontSize: 20,
+                                fontSize: 22,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                                 shadows: [
                                   Shadow(
-                                    color: Colors.black54,
-                                    offset: Offset(1, 1),
-                                    blurRadius: 2,
+                                    color: Colors.black,
+                                    offset: Offset(2, 2),
+                                    blurRadius: 4,
                                   ),
                                 ],
                               ),
