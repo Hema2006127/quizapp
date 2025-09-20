@@ -80,7 +80,7 @@ class _HomepageState extends State<Homepage>
               gradient: LinearGradient(
                 colors: [
                   Color.fromARGB(255, 0, 0, 0),
-                  Color.fromARGB(255, 243, 243, 243),
+                  Color.fromARGB(255, 255, 255, 255),
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -90,7 +90,15 @@ class _HomepageState extends State<Homepage>
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.black.withOpacity(0.5), Colors.transparent],
+                colors: [
+                  const Color.fromARGB(
+                    255,
+                    255,
+                    253,
+                    253,
+                  ).withValues(alpha: 0.5),
+                  const Color.fromARGB(255, 0, 0, 0).withValues(alpha: 0.5),
+                ],
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
               ),
