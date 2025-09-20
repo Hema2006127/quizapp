@@ -10,9 +10,15 @@ class QuizPage extends StatefulWidget {
   State<QuizPage> createState() => _QuizPageState();
 }
 
+bool _halfTimeShown = false;
+
 class _QuizPageState extends State<QuizPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  @override
+  Widget buildr(BuildContext context) {
+    return Scaffold(body: Center(child: Text("Quiz Page")));
+  }
 
   int currentQuestion = 0;
   int score = 0;
@@ -468,26 +474,26 @@ class _QuizPageState extends State<QuizPage>
     _controller.addListener(() {
       final remaining = _controller.duration! * (1.0 - _controller.value);
 
-      if (remaining.inMinutes == 1 && remaining.inSeconds % 60 == 0) {
-        if (!mounted) return;
-        Future.microtask(() {
-          showDialog(
-            context: context,
-            builder: (_) => AlertDialog(
-              title: const Text("⏳ Alert"),
-              content: const Text("Only half the time left!"),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text("ok"),
-                ),
-              ],
+      // ✅ نص الوقت
+      if (!_halfTimeShown &&
+          remaining.inMinutes == 1 && // نص الوقت (من 2 دقيقة → 1 دقيقة)
+          remaining.inSeconds % 60 == 0) {
+        _halfTimeShown = true;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text(
+              "⚠️ Only half the time left!",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-          );
-        });
+            duration: const Duration(seconds: 2), // ⏳ تختفي بعد ثانيتين
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
+          ),
+        );
       }
 
-      // 👇 الوقت خلص
+      // 👇 نهاية الوقت
       if (remaining.inSeconds == 0) {
         if (!mounted) return;
         Future.microtask(() {
@@ -503,12 +509,12 @@ class _QuizPageState extends State<QuizPage>
         });
       }
     });
-  }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+    @override
+    void dispose() {
+      _controller.dispose();
+      super.dispose();
+    }
   }
 
   String get timerString {
