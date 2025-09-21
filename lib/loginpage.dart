@@ -74,7 +74,6 @@ class _HomepageState extends State<Homepage>
     return Scaffold(
       body: Stack(
         children: [
-          // الخلفية
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -90,6 +89,7 @@ class _HomepageState extends State<Homepage>
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
+                // ignore: deprecated_member_use
                 colors: [Colors.black.withOpacity(0.5), Colors.transparent],
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
@@ -97,7 +97,6 @@ class _HomepageState extends State<Homepage>
             ),
           ),
 
-          // المحتوى
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
@@ -113,6 +112,7 @@ class _HomepageState extends State<Homepage>
                           style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
+                            // ignore: deprecated_member_use
                             color: Colors.white.withOpacity(0.9),
                             shadows: [
                               Shadow(
@@ -122,6 +122,7 @@ class _HomepageState extends State<Homepage>
                                   156,
                                   154,
                                   154,
+                                  // ignore: deprecated_member_use
                                 ).withOpacity(0.6),
                                 offset: const Offset(2, 2),
                               ),
@@ -133,7 +134,6 @@ class _HomepageState extends State<Homepage>
                     ),
                     const SizedBox(height: 40),
 
-                    // صورة
                     SlideTransition(
                       position: _slideImage,
                       child: FadeTransition(
@@ -146,7 +146,6 @@ class _HomepageState extends State<Homepage>
                     ),
                     const SizedBox(height: 50),
 
-                    // التكست فيلد
                     SlideTransition(
                       position: _slideTextField,
                       child: FadeTransition(
@@ -155,10 +154,12 @@ class _HomepageState extends State<Homepage>
                           margin: const EdgeInsets.symmetric(horizontal: 24),
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           decoration: BoxDecoration(
+                            // ignore: deprecated_member_use
                             color: Colors.white.withOpacity(0.9),
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
+                                // ignore: deprecated_member_use
                                 color: Colors.black.withOpacity(0.2),
                                 blurRadius: 6,
                                 offset: const Offset(2, 3),
@@ -207,8 +208,9 @@ class _HomepageState extends State<Homepage>
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      NextPage(userName: nameController.text),
+                                  builder: (context) => CategoryPage(
+                                    userName: nameController.text,
+                                  ),
                                 ),
                               );
                             }

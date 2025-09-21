@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/prequiz.dart';
 
-class NextPage extends StatefulWidget {
+class CategoryPage extends StatefulWidget {
   final String userName;
 
-  const NextPage({super.key, required this.userName});
+  const CategoryPage({super.key, required this.userName});
 
   @override
-  State<NextPage> createState() => _NextPageState();
+  State<CategoryPage> createState() => _CategoryPageState();
 }
 
-class _NextPageState extends State<NextPage>
+class _CategoryPageState extends State<CategoryPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-
   final List<Map<String, String>> subjects = [
     {"title": "Dart", "image": "images/dart.jpg"},
     {"title": "Python", "image": "images/Python.jpg"},
@@ -72,7 +71,6 @@ class _NextPageState extends State<NextPage>
           ),
         ),
 
-        /// لستة الكروت
         child: ListView.builder(
           padding: const EdgeInsets.symmetric(vertical: 16),
           itemCount: subjects.length,
@@ -152,6 +150,7 @@ class _NextPageState extends State<NextPage>
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
+                                  // ignore: deprecated_member_use
                                   Colors.black.withOpacity(0.5),
                                   Color.fromARGB(0, 255, 250, 250),
                                 ],

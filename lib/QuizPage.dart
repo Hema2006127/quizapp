@@ -1,10 +1,19 @@
+// ignore: file_names
+// ignore: file_names
+// ignore: file_names
+
 import 'package:flutter/material.dart';
 import 'ResultPage.dart';
 
 class QuizPage extends StatefulWidget {
   final String subjectName;
+  final String userName;
 
-  const QuizPage({super.key, required this.subjectName});
+  const QuizPage({
+    super.key,
+    required this.subjectName,
+    required this.userName,
+  });
 
   @override
   State<QuizPage> createState() => _QuizPageState();
@@ -15,8 +24,8 @@ bool _halfTimeShown = false;
 class _QuizPageState extends State<QuizPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  @override
-  Widget buildr(BuildContext context) {
+  // ignore: non_constant_identifier_names
+  Widget Build(BuildContext context) {
     return Scaffold(body: Center(child: Text("Quiz Page")));
   }
 
@@ -474,9 +483,8 @@ class _QuizPageState extends State<QuizPage>
     _controller.addListener(() {
       final remaining = _controller.duration! * (1.0 - _controller.value);
 
-      // ✅ نص الوقت
       if (!_halfTimeShown &&
-          remaining.inMinutes == 1 && // نص الوقت (من 2 دقيقة → 1 دقيقة)
+          remaining.inMinutes == 1 &&
           remaining.inSeconds % 60 == 0) {
         _halfTimeShown = true;
 
@@ -486,35 +494,28 @@ class _QuizPageState extends State<QuizPage>
               "⚠️ Only half the time left!",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            duration: const Duration(seconds: 2), // ⏳ تختفي بعد ثانيتين
+            duration: const Duration(seconds: 4),
             behavior: SnackBarBehavior.floating,
             margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
           ),
         );
       }
 
-      // 👇 نهاية الوقت
       if (remaining.inSeconds == 0) {
-        if (!mounted) return;
-        Future.microtask(() {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (_) => ResultPage(
-                score: score,
-                total: quizData[widget.subjectName]!.length,
-              ),
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ResultPage(
+              score: score,
+              total: quizData[widget.subjectName]!.length,
+              userName: widget.userName,
+              subjectName: widget.subjectName,
+              elapsedTime: _controller.duration!,
             ),
-          );
-        });
+          ),
+        );
       }
     });
-
-    @override
-    void dispose() {
-      _controller.dispose();
-      super.dispose();
-    }
   }
 
   String get timerString {
@@ -561,6 +562,8 @@ class _QuizPageState extends State<QuizPage>
                     builder: (_) => ResultPage(
                       score: score,
                       total: quizData[widget.subjectName]!.length,
+                      userName: widget.userName,
+                      subjectName: widget.subjectName,
                     ),
                   ),
                 );
@@ -588,6 +591,7 @@ class _QuizPageState extends State<QuizPage>
             color: Colors.black,
           ),
         ),
+
         centerTitle: true,
         actions: [
           Padding(
@@ -608,8 +612,9 @@ class _QuizPageState extends State<QuizPage>
           ),
         ],
       ),
+
       body: Column(
-        children: [
+        children: <Widget>[
           const SizedBox(height: 30),
 
           // ⏳ الدايرة بتاعت التايمر
@@ -646,7 +651,6 @@ class _QuizPageState extends State<QuizPage>
 
           const SizedBox(height: 40),
 
-          // ❓ عرض السؤال الحالي
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
@@ -660,7 +664,6 @@ class _QuizPageState extends State<QuizPage>
             ),
           ),
 
-          // 🟦 عرض الاختيارات
           ...(questions[currentQuestion]["options"] as List<String>).map((
             option,
           ) {
@@ -685,12 +688,42 @@ class _QuizPageState extends State<QuizPage>
           }),
 
           const Spacer(),
-
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
+                showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: const Text("Confirmation of completion"),
+                    content: const Text(
+                      "Are you sure you want to submit the exam?",
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text("Return"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ResultPage(
+                                score: score,
+                                total: quizData[widget.subjectName]!.length,
+                                userName: widget.userName,
+                                subjectName: widget.subjectName,
+                              ),
+                            ),
+                          );
+                        },
+                        child: const Text("submit"),
+                      ),
+                    ],
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
@@ -710,6 +743,21 @@ class _QuizPageState extends State<QuizPage>
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text(
+            "Question ${currentQuestion + 1} / ${quizData[widget.subjectName]!.length}",
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+        ),
       ),
     );
   }

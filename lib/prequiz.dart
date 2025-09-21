@@ -123,7 +123,10 @@ class PreQuizPage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => QuizPage(subjectName: subjectName),
+                            builder: (_) => QuizPage(
+                              subjectName: subjectName,
+                              userName: username,
+                            ),
                           ),
                         );
                       },
