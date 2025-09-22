@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'QuizPage.dart';
+import 'categorypage.dart';
 
 class PreQuizPage extends StatelessWidget {
   final String subjectName;
@@ -19,141 +20,158 @@ class PreQuizPage extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 0, 0, 0),
-              Color.fromARGB(255, 243, 243, 243),
-            ],
+            colors: [Colors.white, Colors.black],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
         ),
-        child: Column(
-          children: [
-            AppBar(
-              backgroundColor: const Color.fromARGB(255, 0, 0, 0),
-              title: Text(
-                "$subjectName Quiz",
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Colors.white,
-                ),
-              ),
-              centerTitle: true,
-              elevation: 6,
-              shadowColor: Colors.black45,
-              iconTheme: const IconThemeData(color: Colors.white),
-            ),
-
-            Expanded(
-              child: Center(
-                child: Column(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          radius: 75,
-                          backgroundImage: AssetImage(quizImage),
-                        ),
-                        const SizedBox(width: 40),
-                        Container(
-                          width: 130,
-                          height: 130,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: const LinearGradient(
-                              colors: [
-                                Color.fromARGB(255, 0, 0, 0),
-                                Color.fromARGB(255, 255, 255, 255),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 8,
-                                offset: Offset(2, 4),
-                              ),
-                            ],
-                          ),
-                          alignment: Alignment.center,
-                          child: const Text(
-                            "10:00",
-                            style: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
+                    CircleAvatar(
+                      radius: 80,
+                      backgroundImage: AssetImage(quizImage),
                     ),
-
-                    const SizedBox(height: 40),
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Text(
-                        "The quiz consists of 10 questions.\n"
-                        "You can start by clicking on the start of the quiz.\n"
-                        "Be focused, $username 👌",
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          shadows: [
-                            Shadow(
-                              color: Colors.black54,
-                              offset: Offset(1, 1),
-                              blurRadius: 2,
-                            ),
-                          ],
+                    const SizedBox(width: 40),
+                    Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: const LinearGradient(
+                          colors: [Colors.black, Colors.white],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 30),
-
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => QuizPage(
-                              subjectName: subjectName,
-                              userName: username,
-                            ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.6),
+                            blurRadius: 10,
+                            spreadRadius: 2,
+                            offset: const Offset(0, 4),
                           ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 40,
-                          vertical: 18,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        elevation: 6,
-                        shadowColor: Colors.black87,
+                        ],
                       ),
-                      icon: const Icon(Icons.play_arrow, size: 28),
-                      label: const Text(
-                        "Start Quiz",
+                      alignment: Alignment.center,
+                      child: const Text(
+                        "10:00",
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 24,
                           fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
                       ),
                     ),
                   ],
                 ),
+
+                const SizedBox(height: 40),
+
+                Card(
+                  color: Colors.black.withOpacity(0.6),
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      "📝 The quiz consists of 10 questions.\n"
+                      "⏱️ You have 10 minutes to finish.\n"
+                      "Be focused, $username 👌",
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        height: 1.6,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 40),
+
+                // زر البداية (أسود منور)
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => QuizPage(
+                          subjectName: subjectName,
+                          userName: username,
+                        ),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 50,
+                      vertical: 18,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    elevation: 15,
+                    shadowColor: Colors.white.withOpacity(0.8), // ✨ Glow effect
+                  ),
+                  icon: const Icon(Icons.play_arrow, size: 28),
+                  label: const Text(
+                    "Start Quiz",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+
+      // ✅ بوتوم بار محسّن
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.black,
+        elevation: 8,
+        height: 60,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // أيقونة ترمز للاختبارات
+            IconButton(
+              icon: const Icon(Icons.assignment, color: Colors.white, size: 26),
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => CategoryPage(userName: username),
+                  ),
+                  (route) => false,
+                );
+              },
+            ),
+
+            const SizedBox(width: 10),
+
+            // اسم المادة
+            Text(
+              subjectName,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                letterSpacing: 1,
               ),
             ),
           ],

@@ -74,25 +74,14 @@ class _HomepageState extends State<Homepage>
     return Scaffold(
       body: Stack(
         children: [
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color.fromARGB(255, 0, 0, 0),
-                  Color.fromARGB(255, 243, 243, 243),
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
-          ),
-          Container(
+          AnimatedContainer(
+            duration: const Duration(seconds: 3),
+            onEnd: () => setState(() {}),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                // ignore: deprecated_member_use
-                colors: [Colors.black.withOpacity(0.5), Colors.transparent],
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
+                colors: [Colors.black, Colors.grey.shade900, Colors.blueGrey],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
             ),
           ),
@@ -102,28 +91,21 @@ class _HomepageState extends State<Homepage>
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    // العنوان
+                    // عنوان متحرك
                     SlideTransition(
                       position: _slideTitle,
                       child: FadeTransition(
                         opacity: _fadeTitle,
                         child: Text(
-                          "Welcome to Quiz App",
+                          " Welcome to Quiz App ",
                           style: TextStyle(
-                            fontSize: 28,
+                            fontSize: 32,
                             fontWeight: FontWeight.bold,
-                            // ignore: deprecated_member_use
-                            color: Colors.white.withOpacity(0.9),
+                            color: Colors.white,
                             shadows: [
                               Shadow(
-                                blurRadius: 8,
-                                color: const Color.fromARGB(
-                                  255,
-                                  156,
-                                  154,
-                                  154,
-                                  // ignore: deprecated_member_use
-                                ).withOpacity(0.6),
+                                blurRadius: 15,
+                                color: Colors.blueAccent.withOpacity(0.8),
                                 offset: const Offset(2, 2),
                               ),
                             ],
@@ -138,9 +120,22 @@ class _HomepageState extends State<Homepage>
                       position: _slideImage,
                       child: FadeTransition(
                         opacity: _fadeImage,
-                        child: const CircleAvatar(
-                          radius: 65,
-                          backgroundImage: AssetImage("images/s1.jpg"),
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.blueAccent.withOpacity(0.6),
+                                blurRadius: 25,
+                                spreadRadius: 3,
+                              ),
+                            ],
+                          ),
+                          child: const CircleAvatar(
+                            radius: 80,
+                            backgroundImage: AssetImage("images/s1.jpg"),
+                          ),
                         ),
                       ),
                     ),
@@ -154,23 +149,30 @@ class _HomepageState extends State<Homepage>
                           margin: const EdgeInsets.symmetric(horizontal: 24),
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           decoration: BoxDecoration(
-                            // ignore: deprecated_member_use
-                            color: Colors.white.withOpacity(0.9),
-                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(25),
+                            border: Border.all(color: Colors.white70),
                             boxShadow: [
                               BoxShadow(
-                                // ignore: deprecated_member_use
-                                color: Colors.black.withOpacity(0.2),
-                                blurRadius: 6,
-                                offset: const Offset(2, 3),
+                                color: Colors.black.withOpacity(0.3),
+                                blurRadius: 10,
+                                offset: const Offset(2, 4),
                               ),
                             ],
                           ),
                           child: TextField(
                             controller: nameController,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
                             decoration: const InputDecoration(
                               hintText: "Enter your name",
-                              prefixIcon: Icon(Icons.person),
+                              hintStyle: TextStyle(color: Colors.white70),
+                              prefixIcon: Icon(
+                                Icons.person,
+                                color: Colors.white,
+                              ),
                               border: InputBorder.none,
                             ),
                           ),
@@ -179,7 +181,6 @@ class _HomepageState extends State<Homepage>
                     ),
                     const SizedBox(height: 40),
 
-                    // الزرار
                     SlideTransition(
                       position: _slideButton,
                       child: FadeTransition(
@@ -187,21 +188,26 @@ class _HomepageState extends State<Homepage>
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 40,
-                              vertical: 14,
+                              horizontal: 60,
+                              vertical: 18,
                             ),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
+                              borderRadius: BorderRadius.circular(40),
                             ),
                             backgroundColor: Colors.black,
                             foregroundColor: Colors.white,
-                            elevation: 6,
+                            elevation: 20,
+                            shadowColor: Colors.blueAccent.withOpacity(0.8),
                           ),
                           onPressed: () {
                             if (nameController.text.trim().isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  content: Text("Please enter your name first"),
+                                  content: Text(
+                                    "⚠️ Please enter your name first",
+                                  ),
+                                  behavior: SnackBarBehavior.floating,
+                                  duration: Duration(seconds: 2),
                                 ),
                               );
                             } else {
@@ -216,8 +222,12 @@ class _HomepageState extends State<Homepage>
                             }
                           },
                           child: const Text(
-                            "Start Quiz",
-                            style: TextStyle(fontSize: 18),
+                            "Start Quiz 🚀",
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.5,
+                            ),
                           ),
                         ),
                       ),
